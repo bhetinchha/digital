@@ -20,8 +20,8 @@ let bootstrap={masters:[],categories:[],customFields:[],trialDays:3}, currentRes
 const NEPAL_DISTRICTS=['Achham','Arghakhanchi','Baglung','Baitadi','Bajhang','Bajura','Banke','Bara','Bardiya','Bhaktapur','Bhojpur','Chitwan','Dadeldhura','Dailekh','Dang','Darchula','Dhading','Dhankuta','Dhanusha','Dolakha','Dolpa','Doti','Eastern Rukum','Gorkha','Gulmi','Humla','Ilam','Jajarkot','Jhapa','Jumla','Kailali','Kalikot','Kanchanpur','Kapilvastu','Kaski','Kathmandu','Kavrepalanchok','Khotang','Lalitpur','Lamjung','Mahottari','Makwanpur','Manang','Morang','Mugu','Mustang','Myagdi','Nawalpur','Nawalparasi West','Nuwakot','Okhaldhunga','Palpa','Panchthar','Parbat','Parsa','Pyuthan','Ramechhap','Rasuwa','Rautahat','Rolpa','Rupandehi','Salyan','Sankhuwasabha','Saptari','Sarlahi','Sindhuli','Sindhupalchok','Siraha','Solukhumbu','Sunsari','Surkhet','Syangja','Tanahun','Taplejung','Terhathum','Udayapur','Western Rukum'];
 function fillDistrictSelects(){const options=NEPAL_DISTRICTS.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('');const s=$('#city');if(s&&!s.dataset.ready){s.insertAdjacentHTML('beforeend',options);s.dataset.ready='1';}const r=$('#regDistrict');if(r&&!r.dataset.ready){r.insertAdjacentHTML('beforeend',options);r.dataset.ready='1';}}
 
-const APP_VERSION='0.5.5';
-const LOCATION_CACHE_KEY='bhetinchha_locations_v054';
+const APP_VERSION='0.6.0-location-final';
+const LOCATION_CACHE_KEY='bhetinchha_locations_v060_final';
 let locationDirectory=null;
 let locationPromise=null;
 
@@ -79,12 +79,104 @@ function loadLocationDirectory(){
   return locationPromise;
 }
 
-function districtKey(directory,district){
-  if(!directory||!district)return '';
-  if(directory[district])return district;
-  const norm=s=>String(s).toLowerCase().replace(/[^a-z]/g,'');
-  const wanted=norm(district);
-  return Object.keys(directory).find(k=>norm(k)===wanted)||'';
+const DISTRICT_ALIASES = {
+  'chitwan': ['chitawan'],
+  'makwanpur': ['makawanpur'],
+  'tanahun': ['tanahu'],
+  'kavrepalanchok': [
+    'kabhrepalanchok',
+    'kavrepalanchowk',
+    'kabhrepalanchowk',
+    'kavre'
+  ],
+  'sindhupalchok': ['sindhupalchowk'],
+  'sankhuwasabha': ['sankhuwasava'],
+  'terhathum': ['tehrathum'],
+  'dhanusha': ['dhanusa'],
+  'kapilvastu': ['kapilbastu'],
+  'eastern rukum': [
+    'rukum east',
+    'east rukum',
+    'rukum eastern'
+  ],
+  'western rukum': [
+    'rukum west',
+    'west rukum',
+    'rukum western'
+  ],
+  'nawalpur': [
+    'nawalparasi east',
+    'nawalparasi east of bardaghat susta',
+    'nawalparasi bardaghat susta east'
+  ],
+  'nawalparasi west': [
+    'parasi',
+    'nawalparasi west of bardaghat susta',
+    'nawalparasi bardaghat susta west'
+  ]
+};
+
+function normalizeDistrictName(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/district/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function districtKey(directory, district) {
+  if (!directory || !district) {
+    return '';
+  }
+
+  if (directory[district]) {
+    return district;
+  }
+
+  const wanted = normalizeDistrictName(district);
+  const keys = Object.keys(directory);
+
+  const exact = keys.find(
+    key => normalizeDistrictName(key) === wanted
+  );
+
+  if (exact) {
+    return exact;
+  }
+
+  const aliases = DISTRICT_ALIASES[wanted] || [];
+
+  const aliasMatch = keys.find(key => {
+    const stored = normalizeDistrictName(key);
+
+    return aliases.some(
+      alias => normalizeDistrictName(alias) === stored
+    );
+  });
+
+  if (aliasMatch) {
+    return aliasMatch;
+  }
+
+  for (const [canonical, variants] of Object.entries(DISTRICT_ALIASES)) {
+    const names = [canonical, ...variants]
+      .map(normalizeDistrictName);
+
+    if (!names.includes(wanted)) {
+      continue;
+    }
+
+    const reverseMatch = keys.find(
+      key => names.includes(normalizeDistrictName(key))
+    );
+
+    if (reverseMatch) {
+      return reverseMatch;
+    }
+  }
+
+  return '';
 }
 
 function fillMunicipalitySelect(el,items,placeholder='पालिका छान्नुहोस्'){
@@ -101,10 +193,55 @@ function fillWardSelect(el,count,placeholder='वडा छान्नुहो
   el.disabled=n<1;
 }
 
-async function municipalitiesFor(district){
-  const directory=locationDirectory||await loadLocationDirectory();
-  const key=districtKey(directory,district);
-  return key?(directory[key]||[]):[];
+async function municipalitiesFor(district) {
+  const directory =
+    locationDirectory || await loadLocationDirectory();
+
+  const key = districtKey(directory, district);
+
+  if (
+    key &&
+    Array.isArray(directory[key]) &&
+    directory[key].length
+  ) {
+    return directory[key];
+  }
+
+  try {
+    const response = await api(
+      'publicLocationOptions',
+      { district: district },
+      8000
+    );
+
+    if (
+      response &&
+      response.ok &&
+      Array.isArray(response.items) &&
+      response.items.length
+    ) {
+      const items = response.items
+        .map(item => ({
+          name: String(item.name || ''),
+          wardCount: Number(item.wardCount || 0)
+        }))
+        .filter(item => item.name);
+
+      locationDirectory = locationDirectory || {};
+      locationDirectory[district] = items;
+      saveLocations(locationDirectory);
+
+      return items;
+    }
+  } catch (error) {
+    console.warn(
+      'Municipality fallback load failed:',
+      district,
+      error
+    );
+  }
+
+  return [];
 }
 
 async function populateMunicipality(district,muni,ward,isRegistration=false){
@@ -124,7 +261,7 @@ async function populateMunicipality(district,muni,ward,isRegistration=false){
     fillMunicipalitySelect(muni,items,isRegistration?'पालिका छान्नुहोस्':'सबै पालिका');
   }else{
     // Give the user a clear, recoverable state instead of endless loading.
-    muni.innerHTML='<option value="">पालिका सूची आउन सकेन — फेरि जिल्ला छान्नुहोस्</option>';
+    muni.innerHTML='<option value="">पालिका सूची उपलब्ध भएन — कृपया फेरि प्रयास गर्नुहोस्</option>';
     muni.disabled=false;
   }
 }
