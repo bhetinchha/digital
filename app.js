@@ -300,8 +300,10 @@ async function init(){
   initEvents();
   setStep(1);
 
-  if($('#resultSummary'))$('#resultSummary').textContent='Category, जिल्ला वा keyword छानेर खोज्नुहोस् ।';
-  if($('#results'))$('#results').innerHTML='<div class="empty-state"><b>खोज्न तयार छ ।</b><br>माथिको search प्रयोग गर्नुहोस् ।</div>';
+  // Testing phase: show the original 3 demo businesses on the main page immediately.
+  currentResults=demoBusinessesForTesting();
+  if($('#resultSummary'))$('#resultSummary').textContent=`Demo Preview • ${currentResults.length} वटा व्यवसाय`;
+  renderResults();
 
   // All remote work is background-only.
   loadBootstrap();
