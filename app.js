@@ -20,7 +20,7 @@ let bootstrap={masters:[],categories:[],customFields:[],trialDays:3}, currentRes
 const NEPAL_DISTRICTS=['Achham','Arghakhanchi','Baglung','Baitadi','Bajhang','Bajura','Banke','Bara','Bardiya','Bhaktapur','Bhojpur','Chitwan','Dadeldhura','Dailekh','Dang','Darchula','Dhading','Dhankuta','Dhanusha','Dolakha','Dolpa','Doti','Eastern Rukum','Gorkha','Gulmi','Humla','Ilam','Jajarkot','Jhapa','Jumla','Kailali','Kalikot','Kanchanpur','Kapilvastu','Kaski','Kathmandu','Kavrepalanchok','Khotang','Lalitpur','Lamjung','Mahottari','Makwanpur','Manang','Morang','Mugu','Mustang','Myagdi','Nawalpur','Nawalparasi West','Nuwakot','Okhaldhunga','Palpa','Panchthar','Parbat','Parsa','Pyuthan','Ramechhap','Rasuwa','Rautahat','Rolpa','Rupandehi','Salyan','Sankhuwasabha','Saptari','Sarlahi','Sindhuli','Sindhupalchok','Siraha','Solukhumbu','Sunsari','Surkhet','Syangja','Tanahun','Taplejung','Terhathum','Udayapur','Western Rukum'];
 function fillDistrictSelects(){const options=NEPAL_DISTRICTS.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('');const s=$('#city');if(s&&!s.dataset.ready){s.insertAdjacentHTML('beforeend',options);s.dataset.ready='1';}const r=$('#regDistrict');if(r&&!r.dataset.ready){r.insertAdjacentHTML('beforeend',options);r.dataset.ready='1';}}
 
-const APP_VERSION='0.5.4';
+const APP_VERSION='0.5.5';
 const LOCATION_CACHE_KEY='bhetinchha_locations_v054';
 let locationDirectory=null;
 let locationPromise=null;
@@ -160,6 +160,25 @@ function stars(v){const n=Math.max(0,Math.min(5,Number(v)||0));return `<span cla
 function businessCard(b){const status=String(b.listingStatus||b.status||'').toUpperCase();const trial=status.includes('TRIAL');return `<article class="business-card"><div class="business-head"><div><button class="business-name" data-profile="${esc(b.id)}">${esc(b.name)} ${b.verified?'<span class="verified-mark">✓</span>':''}</button><div class="business-location">⌖ ${esc(b.address||b.location||'नेपाल')}</div></div><div class="rating">${stars(b.ratingAvg)} <small>(${Number(b.reviewCount||0)})</small></div></div><div class="status-line">${b.openNow===false?'<span>Closed</span>':'<span class="open-pill">Open now</span>'}${trial?'<span class="trial-pill">Trial</span>':''}<span>${b.category?esc(b.category):''}</span></div><p class="business-desc">${esc(b.desc||'')}</p><div class="business-actions"><button class="btn btn-outline" data-profile="${esc(b.id)}">View details</button>${b.phone?`<a class="btn btn-primary" href="tel:${esc(b.phone)}">📞 Call</a>`:''}${b.whatsapp?`<a class="btn btn-outline" target="_blank" rel="noopener" href="https://wa.me/977${esc(String(b.whatsapp).replace(/\D/g,'').slice(-10))}">WhatsApp</a>`:''}<button class="rate-btn" data-rate="${esc(b.id)}" data-name="${esc(b.name)}">☆ Rate</button></div></article>`}
 function bindCards(){$$('[data-profile]').forEach(x=>x.onclick=()=>showProfile(x.dataset.profile));$$('[data-rate]').forEach(x=>x.onclick=()=>openRating(x.dataset.rate,x.dataset.name));}
 function renderResults(){let list=[...currentResults];const local=($('#resultFilter')?.value||'').trim().toLowerCase();if(local)list=list.filter(b=>(b.name+' '+b.location+' '+b.address+' '+b.category).toLowerCase().includes(local));if(verifiedOnly)list=list.filter(b=>b.verified);if(openOnly)list=list.filter(b=>b.openNow!==false);const sort=$('#sortResults')?.value||'relevance';if(sort==='rating')list.sort((a,b)=>(+b.ratingAvg||0)-(+a.ratingAvg||0));if(sort==='verified')list.sort((a,b)=>Number(!!b.verified)-Number(!!a.verified));if(sort==='name')list.sort((a,b)=>String(a.name).localeCompare(String(b.name)));$('#results').innerHTML=list.length?list.map(businessCard).join(''):'<div class="empty-state"><b>नतिजा भेटिएन ।</b><br>अर्को category, शहर वा area बाट खोज्नुहोस् ।</div>';bindCards();}
+
+function demoBusinessesForTesting(){
+  return Array.isArray(FALLBACK.demoBusinesses)
+    ? FALLBACK.demoBusinesses.map((x,i)=>({
+        ...x,
+        id:x.id||x.businessId||('DEMO-'+(i+1)),
+        businessId:x.businessId||x.id||('DEMO-'+(i+1)),
+        isDemo:true,
+        demo:true
+      }))
+    : [];
+}
+function mergeDemoBusinesses(realList){
+  const real=Array.isArray(realList)?realList:[];
+  const demos=demoBusinessesForTesting();
+  const keys=new Set(real.map(x=>String(x.businessId||x.id||x.name||'').toLowerCase()));
+  return real.concat(demos.filter(x=>!keys.has(String(x.businessId||x.id||x.name||'').toLowerCase())));
+}
+
 async function doSearch(){
   const btn=$('#searchBtn');
   if(!btn)return;
@@ -189,6 +208,9 @@ async function doSearch(){
     else if(r.demo)list=FALLBACK.demoBusinesses||[];
     else throw new Error(r.message||'Search failed');
 
+    // Testing phase: keep the original 3 demo businesses visible together with real database results.
+    // This does not write demo rows to Google Sheet.
+    list=mergeDemoBusinesses(list);
     currentResults=list;
     if($('#resultSummary'))$('#resultSummary').textContent=
       `${list.length} वटा नतिजा${p.q?' • '+p.q:''}${p.city?' • '+p.city:''}${p.municipality?' • '+p.municipality:''}${p.ward?' • वडा '+p.ward:''}`;
