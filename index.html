@@ -3,259 +3,60 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0b5ed7">
-  <title>भेटिन्छ — खोजेको सबै भेटिन्छ ।</title>
-  <meta name="description" content="नेपालभरिका सेवा, व्यवसाय, सामग्री, सरकारी जानकारी र आपत्कालीन सहयोग खोज्ने प्लेटफर्म">
+  <meta name="theme-color" content="#ffffff">
+  <title>भेटिन्छ — जे चाहियो, सजिलै खोज्नुहोस् ।</title>
+  <meta name="description" content="नेपालभरिका सेवा, व्यवसाय, घर-जग्गा, यात्रा, स्वास्थ्य, रोजगारी र दैनिक आवश्यकताहरू स्थानअनुसार खोज्ने प्लेटफर्म ।">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <a class="skip-link" href="#mainContent">मुख्य सामग्रीमा जानुहोस्</a>
-
 <header class="site-header">
-  <div class="utility-bar">
-    <div class="container utility-inner">
-      <span>🇳🇵 नेपालभरिका सेवा र आवश्यक जानकारी</span>
-      <span>Verified listings • Local search • Mobile ready</span>
-    </div>
-  </div>
-  <div class="container main-nav">
-    <a class="brand" href="#home" aria-label="भेटिन्छ गृहपृष्ठ">
-      <span class="brand-icon">भे</span>
-      <span class="brand-text"><b>भेटिन्छ</b><small>खोजेको सबै भेटिन्छ</small></span>
-    </a>
-
+  <div class="container nav-wrap">
+    <a class="brand" href="#home" aria-label="भेटिन्छ गृहपृष्ठ"><span class="brand-pin">⌖</span><span><b>भेटिन्छ</b><small>खोजेको सबै भेटिन्छ</small></span></a>
     <nav class="desktop-nav" aria-label="मुख्य नेभिगेसन">
-      <a href="#categorySection">Categories</a>
-      <a href="#featured">Featured</a>
-      <a href="#emergency">Emergency</a>
-      <a href="supplier-login.html">Supplier Login</a>
-      <a href="admin-login.html">Admin</a>
+      <a href="#home">होमपेज</a><a href="#categorySection">क्याटेगोरीहरू</a><a href="#nearMe">Near Me</a><a href="#emergency">आपत्कालीन</a>
     </nav>
-
-    <div class="nav-actions">
-      <button class="btn btn-primary" data-open-register>+ व्यवसाय थप्नुहोस्</button>
-      <button class="sos-mini" id="sosBtn" aria-label="SOS सहायता">🚨 <span>SOS</span></button>
-    </div>
+    <div class="nav-actions"><button class="btn btn-outline" data-open-register>＋ व्यवसाय थप्नुहोस्</button><a class="account-link" href="supplier-login.html">◎ <span>मेरो खाता</span></a></div>
   </div>
 </header>
-
 <main id="mainContent">
-  <section class="hero" id="home">
-    <div class="container hero-grid">
-      <div class="hero-copy">
-        <div class="eyebrow">नेपालको Life Needs Search Platform</div>
-        <h1>जे चाहियो,<br><span>सजिलै खोज्नुहोस् ।</span></h1>
-        <p>Taxi, plumber, manpower, party palace, hospital, tax office, निर्माण सामग्री, धार्मिक सेवा वा दैनिक जीवनको जुनसुकै आवश्यकता — एउटै ठाउँमा ।</p>
-
-        <div class="search-card" role="search" aria-label="सेवा खोज">
-          <div class="search-input-wrap">
-            <div class="search-field">
-              <span class="field-icon">⌕</span>
-              <div class="field-body">
-                <label for="q">के खोज्दै हुनुहुन्छ?</label>
-                <input id="q" autocomplete="off" placeholder="जस्तै: Taxi, Plumber, Hospital...">
-              </div>
-            </div>
-            <div class="search-field location-field">
-              <span class="field-icon">⌖</span>
-              <div class="field-body">
-                <label for="location">कहाँ?</label>
-                <input id="location" placeholder="जिल्ला / पालिका / क्षेत्र">
-              </div>
-              <button class="near-btn" id="nearMeBtn" type="button" title="मेरो स्थान">◎</button>
-            </div>
-          </div>
-          <button class="search-button" id="searchBtn">खोज्नुहोस् <span>→</span></button>
-        </div>
-
-        <div class="quick-searches" aria-label="लोकप्रिय खोज">
-          <span>लोकप्रिय:</span>
-          <button data-search="Taxi Service">🚕 Taxi</button>
-          <button data-search="Plumber">🔧 Plumber</button>
-          <button data-search="Manpower / Recruitment">✈️ Manpower</button>
-          <button data-search="Party Palace">🎉 Party Palace</button>
-          <button data-search="Hospital">🏥 Hospital</button>
-        </div>
-
-        <div class="trust-row">
-          <span><b>✓</b> Verified</span>
-          <span><b>📍</b> Location based</span>
-          <span><b>📞</b> Direct contact</span>
-          <span><b>⭐</b> Paid featured</span>
-        </div>
-      </div>
-
-      <div class="hero-art" aria-label="सेवा खोज visual">
-        <div class="hero-art-glow"></div>
-        <div class="phone-mockup">
-          <div class="phone-top"><span></span><b>भेटिन्छ</b><i>•••</i></div>
-          <div class="phone-search">⌕ के खोज्दै हुनुहुन्छ?</div>
-          <div class="phone-grid">
-            <div><span>🚕</span><b>Taxi</b></div>
-            <div><span>🏠</span><b>Home</b></div>
-            <div><span>🏥</span><b>Health</b></div>
-            <div><span>💼</span><b>Business</b></div>
-          </div>
-          <div class="phone-result">
-            <div class="result-avatar">✓</div>
-            <div><b>Verified Service</b><small>📍 Near you</small></div>
-            <span>→</span>
-          </div>
-          <div class="phone-result">
-            <div class="result-avatar amber">★</div>
-            <div><b>Featured Business</b><small>Sponsored</small></div>
-            <span>→</span>
-          </div>
-        </div>
-        <div class="art-chip chip-a">🚨 Emergency</div>
-        <div class="art-chip chip-b">📍 Near Me</div>
-        <div class="art-chip chip-c">💬 WhatsApp</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section category-section" id="categorySection">
+  <section class="search-hero" id="home">
     <div class="container">
-      <div class="section-title-row">
-        <div><span class="section-label">मुख्य Categories</span><h2>आवश्यक सेवा एक ट्यापमा</h2><p>पहिले मुख्य category छान्नुहोस्, त्यसपछि सम्बन्धित सेवा खोज्नुहोस् ।</p></div>
-        <a href="#search-results" class="more-link">सबै व्यवसाय →</a>
+      <div class="hero-title"><h1>जे चाहियो, सजिलै <span>खोज्नुहोस् ।</span></h1><p>नेपालभरिका व्यवसाय, सेवा, घर-जग्गा, यात्रा र दैनिक आवश्यकताहरू एउटै ठाउँमा ।</p></div>
+      <div class="finder-card" role="search">
+        <div class="finder-field"><label for="categorySelect">क्याटेगोरी छान्नुहोस्</label><select id="categorySelect"><option value="">सबै क्याटेगोरी</option></select></div>
+        <div class="finder-field"><label for="city">शहर / जिल्ला</label><input id="city" placeholder="जस्तै: काठमाडौं, चितवन"></div>
+        <div class="finder-field"><label for="area">क्षेत्र / स्थान</label><input id="area" placeholder="जस्तै: बानेश्वर, इमाडोल"></div>
+        <div class="finder-field keyword-field"><label for="q">के खोज्दै हुनुहुन्छ?</label><input id="q" autocomplete="off" placeholder="Plumber, Room Rent, Flight..."></div>
+        <button class="search-main" id="searchBtn">⌕ खोज्नुहोस्</button>
       </div>
-      <div class="category-grid" id="categories"></div>
+      <div class="popular-row"><b>लोकप्रिय खोज:</b><button data-search="Taxi Service">🚕 Taxi</button><button data-search="Plumber">🔧 Plumber</button><button data-search="Room Rent">🏠 Room Rent</button><button data-search="Flight">✈️ Flight</button><button data-search="Hospital">🏥 Hospital</button><button data-search="Party Palace">🎉 Party Palace</button></div>
     </div>
   </section>
 
-  <section class="section journey-section">
-    <div class="container">
-      <div class="section-title-row">
-        <div><span class="section-label">Life Needs</span><h2>तपाईं के गर्न खोज्दै हुनुहुन्छ?</h2><p>कामअनुसार आवश्यक सेवा समूहमा छिटो जानुहोस् ।</p></div>
-      </div>
-      <div class="journey-grid">
-        <button class="journey-card" data-search="घर निर्माण"><span class="journey-art blue">🏗️</span><span><b>घर बनाउँदै छु</b><small>Engineer, मिस्त्री, सामग्री, plumber...</small></span><i>→</i></button>
-        <button class="journey-card" data-search="Party Palace"><span class="journey-art rose">💍</span><span><b>विवाह / कार्यक्रम</b><small>Venue, catering, decoration, photo...</small></span><i>→</i></button>
-        <button class="journey-card" data-search="Manpower / Recruitment"><span class="journey-art sky">✈️</span><span><b>विदेश जान खोज्दै छु</b><small>Manpower, consultancy, travel...</small></span><i>→</i></button>
-        <button class="journey-card" data-search="Taxi Service"><span class="journey-art amber">🚕</span><span><b>यात्रा / गाडी चाहियो</b><small>Taxi, rental, driver, ticket...</small></span><i>→</i></button>
-      </div>
-    </div>
-  </section>
+  <section class="section" id="categorySection"><div class="container"><div class="section-head"><div><h2>क्याटेगोरीहरू</h2><p>तपाईंलाई चाहिएको सेवा वा व्यवसाय छिटो छान्नुहोस् ।</p></div><button id="showAllCategories" class="text-btn">सबै हेर्नुहोस् →</button></div><div class="category-grid" id="categories"></div></div></section>
 
-  <section class="section featured-section" id="featured">
-    <div class="container">
-      <div class="section-title-row">
-        <div><span class="section-label">Featured & Verified</span><h2>छानिएका व्यवसाय र सेवाहरू</h2><p>Paid/Featured र Verified status स्पष्ट रूपमा छुट्टाछुट्टै देखाइन्छ ।</p></div>
-        <button class="more-link button-link" onclick="document.getElementById('search-results').scrollIntoView({behavior:'smooth'})">सबै हेर्नुहोस् →</button>
-      </div>
-      <div class="featured-grid" id="featuredBusinesses"></div>
-    </div>
-  </section>
+  <section class="section near-section" id="nearMe"><div class="container"><div class="near-box"><div class="near-title"><span>⌖</span><div><h2>Services Near Me</h2><p>तपाईंको स्थान नजिक उपलब्ध व्यवसाय र सेवा खोज्नुहोस् ।</p></div></div><div class="near-controls"><input id="nearAddress" placeholder="ठेगाना / क्षेत्र लेख्नुहोस्"><button class="btn btn-dark" id="useAddress">Use address</button><button class="btn btn-danger" id="nearMeBtn">◎ Use my location</button></div><div class="distance-row"><label>अधिकतम दूरी: <b id="distanceLabel">5 km</b></label><input id="distanceRange" type="range" min="1" max="25" value="5" step="1"></div></div><div class="filter-bar"><input id="resultFilter" placeholder="नाम वा क्षेत्रमा खोज्नुहोस्..."><button class="filter-chip" id="filterVerified">✓ Verified</button><button class="filter-chip" id="filterOpen">◷ Open now</button><select id="sortResults"><option value="relevance">Relevance</option><option value="rating">Highest Rating</option><option value="verified">Verified First</option><option value="name">Name A–Z</option></select></div></div></section>
 
-  <section class="section results-section" id="search-results">
-    <div class="container">
-      <div class="section-title-row result-heading">
-        <div><span class="section-label">Search Results</span><h2>खोज नतिजा</h2><p id="resultSummary">नाम, category, keyword र location अनुसार नतिजा ।</p></div>
-        <select id="sortResults" class="sort-select" aria-label="नतिजा क्रम">
-          <option value="relevance">Relevance</option>
-          <option value="verified">Verified First</option>
-          <option value="name">Name A–Z</option>
-        </select>
-      </div>
-      <div class="results" id="results" aria-live="polite"></div>
-    </div>
-  </section>
+  <section class="section results-section" id="search-results"><div class="container"><div class="section-head"><div><h2 id="resultsTitle">तपाईंका लागि उपलब्ध नतिजा</h2><p id="resultSummary">Database मा उपलब्ध व्यवसाय र सेवाहरू यहाँ देखिन्छन् ।</p></div></div><div class="results-grid" id="results" aria-live="polite"></div></div></section>
 
-  <section class="section emergency-section" id="emergency">
-    <div class="container emergency-wrap">
-      <div class="emergency-copy">
-        <span class="emergency-label">🚨 Emergency Help</span>
-        <h2>आपत्कालीन अवस्थामा सही सम्पर्कमा छिटो पुग्नुहोस् ।</h2>
-        <p>Official emergency contacts लाई प्राथमिकता दिइन्छ । भेटिन्छ स्वयं police, ambulance वा rescue service होइन ।</p>
-        <button class="btn btn-danger-light" onclick="document.getElementById('sosBtn').click()">SOS सहायता खोल्नुहोस्</button>
-      </div>
-      <div class="emergency-grid">
-        <a class="emergency-card critical" href="tel:100"><span>👮</span><div><small>Nepal Police</small><b>100</b></div><i>Call</i></a>
-        <button class="emergency-card" id="policeBtn"><span>📋</span><div><small>नेपालभरि</small><b>Police Contacts</b></div><i>Open</i></button>
-        <button class="emergency-card" onclick="alert('Location based ambulance directory अर्को data update मा जोडिन्छ ।')"><span>🚑</span><div><small>नजिकको</small><b>Ambulance</b></div><i>Find</i></button>
-        <button class="emergency-card" onclick="document.getElementById('sosBtn').click()"><span>🩸</span><div><small>Urgent</small><b>Blood / Rescue</b></div><i>Help</i></button>
-      </div>
-    </div>
-  </section>
+  <section class="section emergency-strip" id="emergency"><div class="container emergency-row"><div class="emergency-title"><span>🚨</span><div><b>आपत्कालीन सेवा</b><small>Official contacts लाई प्राथमिकता दिनुहोस् ।</small></div></div><a href="tel:100">👮 प्रहरी <b>100</b></a><button id="policeBtn">📋 नेपालभरि Police Contacts</button><button id="sosBtn">🚨 SOS सहायता</button></div></section>
 
-  <section class="business-cta-section">
-    <div class="container business-cta">
-      <div>
-        <span class="section-label light">For Business</span>
-        <h2>तपाईंको व्यवसाय पनि ग्राहकले सजिलै भेटून् ।</h2>
-        <p>Verified profile, direct call, WhatsApp lead, local search, mini-site र featured placement सहित आफ्नो digital presence बनाउनुहोस् ।</p>
-        <div class="cta-features"><span>✓ Business Profile</span><span>📍 Local Search</span><span>📊 Lead Analytics</span><span>⭐ Featured Option</span></div>
-      </div>
-      <div class="cta-box">
-        <small>Registration सुरु गर्नुहोस्</small>
-        <b>Free / Paid Plans</b>
-        <button class="btn btn-white" data-open-register>+ नयाँ व्यवसाय थप्नुहोस्</button>
-        <a href="supplier-login.html">पहिल्यै दर्ता छ? Supplier Login →</a>
-      </div>
-    </div>
-  </section>
+  <section class="business-mini"><div class="container business-mini-inner"><div><b>तपाईंको व्यवसाय पनि ग्राहकले भेटून् ।</b><span>पहिलो Trial अवधि Super Admin Settings अनुसार Free; त्यसपछि Paid activation आवश्यक ।</span></div><button class="btn btn-primary" data-open-register>＋ व्यवसाय दर्ता गर्नुहोस्</button></div></section>
 </main>
+<footer class="footer"><div class="container footer-inner"><div><b>भेटिन्छ</b><small>नेपालभरिका दैनिक आवश्यकताहरू खोज्ने डिजिटल प्लेटफर्म ।</small></div><div><a href="#categorySection">Categories</a><a href="#nearMe">Near Me</a><a href="#emergency">Emergency</a><a href="supplier-login.html">Supplier Login</a></div></div><div class="container footer-bottom"><span>© <span id="year"></span> भेटिन्छ ।</span><strong>Designed &amp; Developed by Nirajan Aryal | <a href="tel:9851113811">9851113811</a></strong></div></footer>
 
-<footer class="footer">
-  <div class="container footer-main">
-    <div class="footer-brand-wrap">
-      <a class="brand footer-brand" href="#home"><span class="brand-icon">भे</span><span class="brand-text"><b>भेटिन्छ</b><small>खोजेको सबै भेटिन्छ ।</small></span></a>
-      <p>नेपालभरिका सेवा, व्यवसाय, supplier, सरकारी जानकारी र emergency contacts खोज्ने platform ।</p>
-    </div>
-    <div class="footer-col"><b>Quick Links</b><a href="#categorySection">Categories</a><a href="#featured">Featured</a><a href="#emergency">Emergency</a></div>
-    <div class="footer-col"><b>Business</b><button data-open-register>व्यवसाय थप्नुहोस्</button><a href="supplier-login.html">Supplier Login</a><a href="admin-login.html">Admin</a></div>
-  </div>
-  <div class="container footer-bottom"><span>© <span id="year"></span> भेटिन्छ ।</span><strong>Designed &amp; Developed by Nirajan Aryal | <a href="tel:9851113811">9851113811</a></strong></div>
-</footer>
+<nav class="mobile-nav"><a href="#home">⌂<small>Home</small></a><a href="#categorySection">▦<small>Categories</small></a><button data-open-register>＋<small>Business</small></button><a href="#nearMe">⌖<small>Near Me</small></a><button id="mobileSOS">🚨<small>SOS</small></button></nav>
 
-<nav class="mobile-nav" aria-label="मोबाइल नेभिगेसन">
-  <a href="#home"><span>⌂</span><small>Home</small></a>
-  <a href="#categorySection"><span>⌕</span><small>Search</small></a>
-  <button class="mobile-add" data-open-register><span>＋</span><small>Add</small></button>
-  <button onclick="document.getElementById('sosBtn').click()"><span>🚨</span><small>SOS</small></button>
-  <a href="supplier-login.html"><span>◎</span><small>Account</small></a>
-</nav>
+<div class="modal" id="businessModal" role="dialog" aria-modal="true"><div class="modal-panel wide-modal"><div class="modal-head"><div><h2>आफ्नो व्यवसाय भेटिन्छमा जोड्नुहोस्</h2><p>Category अनुसार विवरण बदलिन्छ । Trial सकिएपछि listing स्वतः hide हुन्छ; Paid activation पछि फेरि देखिन्छ ।</p></div><button class="iconbtn" data-close="businessModal">✕</button></div><div class="stepper"><span class="step active">1 व्यवसाय</span><span class="step">2 Category</span><span class="step">3 विवरण</span><span class="step">4 Review</span></div><form id="businessForm" onsubmit="return false">
+<section class="reg-step"><div class="form-grid"><div class="field"><label>Listing Type</label><select name="listingType"><option>Business / Company</option><option>Individual Professional</option><option>Supplier</option><option>Rental Service</option><option>Organization</option></select></div><div class="field"><label>Business / Provider Name *</label><input name="name" required></div><div class="field"><label>Contact Person</label><input name="contactPerson"></div><div class="field"><label>Mobile *</label><input name="mobile" inputmode="numeric" required></div><div class="field"><label>WhatsApp</label><input name="whatsapp" inputmode="numeric"></div><div class="field"><label>Email</label><input name="email" type="email"></div><div class="field"><label>District *</label><input name="district" required></div><div class="field"><label>Municipality / City</label><input name="municipality"></div><div class="field"><label>Area / Ward</label><input name="area"></div><div class="field"><label>पूरा ठेगाना</label><input name="address"></div><div class="field full"><label>छोटो परिचय</label><textarea name="description"></textarea></div></div></section>
+<section class="reg-step" hidden><div class="notice">मुख्य Category छान्नुहोस् । Search, registration fields र public result card यही Category अनुसार चल्छ ।</div><div id="categoryPicks" class="category-picks"></div></section>
+<section class="reg-step" hidden><div id="dynamicFields" class="form-grid"></div><div class="field full"><label>Search Keywords</label><input name="keywords" placeholder="जस्तै: emergency plumber, airport taxi, furnished room"></div></section>
+<section class="reg-step" hidden><div class="trial-review"><span class="trial-badge">FREE TRIAL</span><h3>सुरुमा Trial listing</h3><p>Default Trial Days Super Admin Settings बाट नियन्त्रण हुन्छ । Trial समाप्त भएपछि business data सुरक्षित रहन्छ तर public search मा देखिँदैन । Payment verify भएपछि Admin ले plan/अवधि select गरेर पुनः Active गर्छ ।</p></div><div class="form-grid"><div class="field"><label>Registration / License Ref.</label><input name="licenseRef"></div><div class="field"><label>PAN / VAT</label><input name="panvat"></div><div class="field full consent-field"><label><input type="checkbox" id="regConsent"> मैले दिएको विवरण सही छ र verification/review आवश्यक हुने कुरा स्वीकार गर्दछु ।</label></div></div></section>
+<div class="modal-actions"><button class="btn btn-outline" id="regBack" hidden>पछाडि</button><button class="btn btn-primary" id="regNext">अर्को</button></div></form></div></div>
 
-<div class="modal" id="businessModal" role="dialog" aria-modal="true" aria-labelledby="businessTitle">
-  <div class="modal-panel">
-    <div class="modal-head"><div><h2 id="businessTitle">नयाँ व्यवसाय / सेवा थप्नुहोस्</h2><p>व्यवसाय विवरण → Category → Plan → Payment & Review</p></div><button class="iconbtn" data-close="businessModal">✕</button></div>
-    <div class="stepper"><span class="step active">1. व्यवसाय</span><span class="step">2. Category</span><span class="step">3. Plan</span><span class="step">4. Review</span></div>
-    <form id="businessForm" onsubmit="return false">
-      <section class="reg-step"><div class="form-grid">
-        <div class="field"><label>Listing Type</label><select name="listingType"><option>Business / Company</option><option>Individual Professional</option><option>Supplier</option><option>Rental Service</option><option>Organization</option></select></div>
-        <div class="field"><label>Business Name</label><input name="name" required></div>
-        <div class="field"><label>Contact Person</label><input name="contactPerson"></div>
-        <div class="field"><label>Mobile</label><input name="mobile" inputmode="numeric"></div>
-        <div class="field"><label>WhatsApp</label><input name="whatsapp" inputmode="numeric"></div>
-        <div class="field"><label>Email</label><input name="email" type="email"></div>
-        <div class="field"><label>Province</label><input name="province"></div>
-        <div class="field"><label>District</label><input name="district"></div>
-        <div class="field"><label>Municipality / Rural Municipality</label><input name="municipality"></div>
-        <div class="field"><label>Ward / Area</label><input name="ward"></div>
-        <div class="field full"><label>पूरा ठेगाना / Landmark</label><input name="address" placeholder="जस्तै: नयाँ बानेश्वर, थापागाउँ नजिक"></div>
-        <div class="field full"><label>Business Description</label><textarea name="description" placeholder="मुख्य सेवा/सामग्री र विशेषता लेख्नुहोस्"></textarea></div>
-      </div></section>
-      <section class="reg-step" hidden><div class="notice">सही category छान्नुहोस् । एउटै व्यवसाय धेरै category मा हुन सक्छ । Paid plan अनुसार category limit लागू हुन्छ ।</div><div id="categoryPicks" class="category-picks"></div></section>
-      <section class="reg-step" hidden><div class="plans" id="plans"></div></section>
-      <section class="reg-step" hidden><div class="form-grid">
-        <div class="field"><label>Payment Method</label><select name="paymentMethod"><option>Bank Transfer</option><option>eSewa</option><option>Khalti</option><option>Other</option></select></div>
-        <div class="field"><label>Transaction / Reference No.</label><input name="transactionRef"></div>
-        <div class="field full"><label>Business Registration / License Reference</label><input name="licenseRef" placeholder="Regulated category मा license/approval reference अनिवार्य हुन सक्छ"></div>
-        <div class="field full"><label>Search Keywords</label><input name="keywords" placeholder="जस्तै: taxi, airport pickup, cab, गाडी भाडा"></div>
-        <div class="field full consent-field"><label><input type="checkbox" required> मैले दिएको विवरण सही छ र review/verification पछि मात्र public listing हुने कुरा स्वीकार गर्दछु ।</label></div>
-      </div></section>
-      <div class="modal-actions"><button class="btn btn-outline" id="regBack" hidden>Back</button><button class="btn btn-primary" id="regNext">Next</button></div>
-    </form>
-  </div>
-</div>
-
-<div class="modal" id="profileModal" role="dialog" aria-modal="true"><div class="modal-panel business-detail"><div class="modal-head"><h2>Business Mini Site</h2><button class="iconbtn" data-close="profileModal">✕</button></div><div id="profileContent"></div></div></div>
-
-<div class="modal" id="sosModal" role="dialog" aria-modal="true"><div class="modal-panel"><div class="modal-head"><h2>🚨 Emergency Help</h2><button class="iconbtn" data-close="sosModal">✕</button></div><div class="notice danger-notice">Life-threatening अवस्थामा official emergency service लाई पहिले call गर्नुहोस् । भेटिन्छ स्वयं police/ambulance/rescue service होइन ।</div><div class="form-grid modal-spacer"><div class="field"><label>Emergency Type</label><select id="sosType"><option>Medical / Ambulance</option><option>Police / Security</option><option>Fire</option><option>Accident / Rescue</option><option>Blood Needed</option><option>Vehicle Breakdown</option><option>Other</option></select></div><div class="field"><label>Location / Area</label><input id="sosLocation"></div><div class="field full"><label>Short Detail</label><textarea id="sosDetail"></textarea></div></div><div class="modal-actions"><a class="btn btn-danger" href="tel:100">📞 Nepal Police 100</a><button class="btn btn-primary" id="sendSOS">Alert Request पठाउनुहोस्</button></div></div></div>
-
-<script src="config.js"></script>
-<script src="data.js"></script>
-<script src="app.js"></script>
-</body>
-</html>
+<div class="modal" id="profileModal" role="dialog" aria-modal="true"><div class="modal-panel business-detail"><div class="modal-head"><h2>Business Profile</h2><button class="iconbtn" data-close="profileModal">✕</button></div><div id="profileContent"></div></div></div>
+<div class="modal" id="reviewModal" role="dialog" aria-modal="true"><div class="modal-panel small-modal"><div class="modal-head"><div><h2>Rating दिनुहोस्</h2><p id="reviewBusinessName"></p></div><button class="iconbtn" data-close="reviewModal">✕</button></div><div class="rating-picker" id="ratingPicker"><button data-star="1">★</button><button data-star="2">★</button><button data-star="3">★</button><button data-star="4">★</button><button data-star="5">★</button></div><div class="form-grid"><div class="field"><label>तपाईंको नाम</label><input id="reviewName"></div><div class="field"><label>Mobile *</label><input id="reviewMobile" inputmode="numeric"></div><div class="field full"><label>Review</label><textarea id="reviewText"></textarea></div></div><div class="modal-actions"><button class="btn btn-primary" id="submitReview">Rating Submit</button></div></div></div>
+<div class="modal" id="sosModal"><div class="modal-panel small-modal"><div class="modal-head"><h2>🚨 Emergency Help</h2><button class="iconbtn" data-close="sosModal">✕</button></div><div class="notice danger-notice">ज्यान जोखिममा भएको अवस्थामा official emergency service लाई पहिले call गर्नुहोस् ।</div><div class="modal-actions"><a class="btn btn-danger" href="tel:100">📞 Nepal Police 100</a><button class="btn btn-outline" id="openPoliceDirectory">नेपालभरि Police Contacts</button></div></div></div>
+<script src="config.js"></script><script src="data.js"></script><script src="app.js"></script>
+</body></html>
