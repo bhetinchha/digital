@@ -20,8 +20,8 @@ let bootstrap={masters:[],categories:[],customFields:[],trialDays:3}, currentRes
 const NEPAL_DISTRICTS=['Achham','Arghakhanchi','Baglung','Baitadi','Bajhang','Bajura','Banke','Bara','Bardiya','Bhaktapur','Bhojpur','Chitwan','Dadeldhura','Dailekh','Dang','Darchula','Dhading','Dhankuta','Dhanusha','Dolakha','Dolpa','Doti','Eastern Rukum','Gorkha','Gulmi','Humla','Ilam','Jajarkot','Jhapa','Jumla','Kailali','Kalikot','Kanchanpur','Kapilvastu','Kaski','Kathmandu','Kavrepalanchok','Khotang','Lalitpur','Lamjung','Mahottari','Makwanpur','Manang','Morang','Mugu','Mustang','Myagdi','Nawalpur','Nawalparasi West','Nuwakot','Okhaldhunga','Palpa','Panchthar','Parbat','Parsa','Pyuthan','Ramechhap','Rasuwa','Rautahat','Rolpa','Rupandehi','Salyan','Sankhuwasabha','Saptari','Sarlahi','Sindhuli','Sindhupalchok','Siraha','Solukhumbu','Sunsari','Surkhet','Syangja','Tanahun','Taplejung','Terhathum','Udayapur','Western Rukum'];
 function fillDistrictSelects(){const options=NEPAL_DISTRICTS.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('');const s=$('#city');if(s&&!s.dataset.ready){s.insertAdjacentHTML('beforeend',options);s.dataset.ready='1';}const r=$('#regDistrict');if(r&&!r.dataset.ready){r.insertAdjacentHTML('beforeend',options);r.dataset.ready='1';}}
 
-const APP_VERSION='0.6.0.2';
-const LOCATION_CACHE_KEY='bhetinchha_locations_v0602';
+const APP_VERSION='0.5.5';
+const LOCATION_CACHE_KEY='bhetinchha_locations_v06022';
 let locationDirectory=null;
 let locationPromise=null;
 
@@ -79,69 +79,61 @@ function loadLocationDirectory(){
   return locationPromise;
 }
 
-function normalizeDistrictName(value){
-  const raw=String(value||'').trim();
-  if(!raw)return '';
-
-  const key=raw
+function normalizeDistrictClient(value) {
+  const raw = String(value || '')
+    .trim()
     .toLowerCase()
-    .replace(/[._-]+/g,' ')
-    .replace(/\s+/g,' ')
-    .trim();
+    .replace(/[._-]+/g, ' ')
+    .replace(/\s+/g, ' ');
 
-  const aliases={
-    'chitawan':'Chitwan',
-    'chitwan':'Chitwan',
-    'makawanpur':'Makwanpur',
-    'makwanpur':'Makwanpur',
-    'tanahu':'Tanahun',
-    'tanahun':'Tanahun',
-    'kabhrepalanchok':'Kavrepalanchok',
-    'kavrepalanchok':'Kavrepalanchok',
-    'kavre':'Kavrepalanchok',
-    'kabhre':'Kavrepalanchok',
-    'nawalparasi east':'Nawalpur',
-    'nawalparasi (east)':'Nawalpur',
-    'nawalparasi purba':'Nawalpur',
-    'nawalpur':'Nawalpur',
-    'nawalparasi west':'Nawalparasi West',
-    'nawalparasi (west)':'Nawalparasi West',
-    'nawalparasi paschim':'Nawalparasi West',
-    'parasi':'Nawalparasi West',
-    'rukum east':'Eastern Rukum',
-    'rukum (east)':'Eastern Rukum',
-    'rukum purba':'Eastern Rukum',
-    'eastern rukum':'Eastern Rukum',
-    'rukum west':'Western Rukum',
-    'rukum (west)':'Western Rukum',
-    'rukum paschim':'Western Rukum',
-    'western rukum':'Western Rukum',
-    'sindhupalchowk':'Sindhupalchok',
-    'sindhupalchok':'Sindhupalchok',
-    'dhanusha':'Dhanusa',
-    'dhanusa':'Dhanusa',
-    'kapilbastu':'Kapilvastu',
-    'kapilvastu':'Kapilvastu',
-    'terhathum':'Tehrathum',
-    'tehrathum':'Tehrathum'
+  const aliases = {
+    'nawalparasi e': 'nawalpur',
+    'nawalparasi east': 'nawalpur',
+    'nawalpur': 'nawalpur',
+
+    'nawalparasi w': 'nawalparasi west',
+    'nawalparasi west': 'nawalparasi west',
+    'parasi': 'nawalparasi west',
+
+    'rukum e': 'eastern rukum',
+    'rukum east': 'eastern rukum',
+    'eastern rukum': 'eastern rukum',
+
+    'rukum w': 'western rukum',
+    'rukum west': 'western rukum',
+    'western rukum': 'western rukum',
+
+    'chitawan': 'chitwan',
+    'chitwan': 'chitwan',
+
+    'makawanpur': 'makwanpur',
+    'makwanpur': 'makwanpur',
+
+    'tanahu': 'tanahun',
+    'tanahun': 'tanahun',
+
+    'kabhrepalanchok': 'kavrepalanchok',
+    'kavrepalanchok': 'kavrepalanchok'
   };
 
-  return aliases[key]||raw;
+  return aliases[raw] || raw;
 }
 
-function districtKey(directory,district){
-  if(!directory||!district)return '';
+function districtKey(directory, district) {
+  if (!directory || !district) {
+    return '';
+  }
 
-  const canonical=normalizeDistrictName(district);
-  if(directory[canonical])return canonical;
-  if(directory[district])return district;
+  if (directory[district]) {
+    return district;
+  }
 
-  const norm=value=>normalizeDistrictName(value)
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g,'');
+  const wanted = normalizeDistrictClient(district);
 
-  const wanted=norm(district);
-  return Object.keys(directory).find(key=>norm(key)===wanted)||'';
+  return Object.keys(directory).find(
+    key =>
+      normalizeDistrictClient(key) === wanted
+  ) || '';
 }
 
 function fillMunicipalitySelect(el,items,placeholder='पालिका छान्नुहोस्'){
@@ -158,37 +150,44 @@ function fillWardSelect(el,count,placeholder='वडा छान्नुहो
   el.disabled=n<1;
 }
 
-async function municipalitiesFor(district){
-  const directory=locationDirectory||await loadLocationDirectory();
-  const key=districtKey(directory,district);
+async function municipalitiesFor(district) {
+  const directory =
+    locationDirectory || await loadLocationDirectory();
 
-  if(key&&Array.isArray(directory[key])&&directory[key].length){
+  const key = districtKey(directory, district);
+
+  if (
+    key &&
+    Array.isArray(directory[key]) &&
+    directory[key].length
+  ) {
     return directory[key];
   }
 
-  // Safety fallback: ask the backend for this district directly.
-  // This prevents one stale/mismatched directory entry from breaking the UI.
-  try{
-    const response=await api('publicLocationOptions',{
-      district:normalizeDistrictName(district)
-    },8000);
+  try {
+    const response = await api(
+      'publicLocationOptions',
+      { district: district },
+      8000
+    );
 
-    if(response&&response.ok&&Array.isArray(response.items)&&response.items.length){
-      const items=response.items.map(item=>({
-        name:String(item.name||''),
-        wardCount:Number(item.wardCount||0)
-      })).filter(item=>item.name);
-
-      if(items.length){
-        const canonical=normalizeDistrictName(district);
-        locationDirectory=locationDirectory||{};
-        locationDirectory[canonical]=items;
-        saveLocations(locationDirectory);
-        return items;
-      }
+    if (
+      response &&
+      response.ok &&
+      Array.isArray(response.items) &&
+      response.items.length
+    ) {
+      return response.items.map(item => ({
+        name: String(item.name || ''),
+        wardCount: Number(item.wardCount || 0)
+      }));
     }
-  }catch(error){
-    console.warn('Direct municipality load failed:',error);
+  } catch (error) {
+    console.warn(
+      'Municipality direct fallback failed:',
+      district,
+      error
+    );
   }
 
   return [];
@@ -211,7 +210,7 @@ async function populateMunicipality(district,muni,ward,isRegistration=false){
     fillMunicipalitySelect(muni,items,isRegistration?'पालिका छान्नुहोस्':'सबै पालिका');
   }else{
     // Give the user a clear, recoverable state instead of endless loading.
-    muni.innerHTML='<option value="">पालिका सूची आउन सकेन — फेरि जिल्ला छान्नुहोस्</option>';
+    muni.innerHTML='<option value="">पालिका सूची उपलब्ध भएन — कृपया फेरि प्रयास गर्नुहोस्</option>';
     muni.disabled=false;
   }
 }
