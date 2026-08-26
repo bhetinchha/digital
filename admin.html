@@ -1,1 +1,368 @@
-<!doctype html><html lang="ne"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin — भेटिन्छ</title><link rel="stylesheet" href="styles.css"></head><body><div class="admin-layout"><aside class="sidebar"><a class="brand" href="index.html" style="color:#fff"><span class="brand-mark">भे</span><span>भेटिन्छ</span></a><p id="who"></p><hr><a href="#dashboard">📊 Dashboard</a><a href="#businesses">🏪 Businesses</a><a href="#categories">🗂️ Categories</a><a href="#plans">💳 Plans & Payments</a><a href="#emergency">🚨 Emergency</a><a href="#manpower">✈️ Manpower Review</a><a href="#admins">🛡️ Admins & Permissions</a><a href="#audit">🧾 Audit Log</a><button id="logoutBtn">↪ Logout</button></aside><main class="main"><div class="section-head"><div><h1>Super Admin Dashboard</h1><div class="muted">Permission-based control, audit trail र sensitive-action approval.</div></div><a class="btn btn-outline" href="index.html">Public Site</a></div><section class="kpis" id="kpis"></section><section class="section" id="businesses"><div class="section-head"><div><h2>Pending Business Approval</h2><div class="muted">Payment ≠ Verification. Documents/identity/category rules review गरेर मात्र approve.</div></div></div><div class="tablewrap"><table class="table"><thead><tr><th>Business</th><th>Category</th><th>Plan</th><th>Action</th></tr></thead><tbody id="pendingRows"></tbody></table></div></section><section class="section" id="admins"><div class="section-head"><div><h2>Admins & Permissions</h2><div class="muted">Super Admin बाट मात्र Admin add, Active/Inactive र permission परिवर्तन.</div></div><button class="btn btn-primary" onclick="alert('Add Admin form अर्को update मा backend field mapping सहित विस्तार गर्न सकिन्छ ।')">+ Add Admin</button></div><div class="tablewrap"><table class="table"><thead><tr><th>Name</th><th>Username</th><th>Status</th><th>Permissions</th><th>Action</th></tr></thead><tbody id="adminsRows"></tbody></table></div></section><section class="section" id="audit"><h2>Audit Log</h2><div class="tablewrap"><table class="table"><thead><tr><th>Date/Time</th><th>Actor</th><th>Action</th><th>Record</th></tr></thead><tbody id="auditRows"></tbody></table></div></section><section class="section"><div class="notice"><strong>Security rule:</strong> Admin लाई UI मा button लुकाउनु मात्र पर्याप्त होइन; backend ले permission पुनः जाँच गर्छ । Permanent delete Admin बाट हुँदैन—request/approval workflow प्रयोग हुन्छ ।</div></section></main></div><script src="config.js"></script><script src="admin.js"></script></body></html>
+<!doctype html>
+<html lang="ne">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#08192d">
+  <title>Super Admin — भेटिन्छ</title>
+  <style>
+    :root{
+      --navy:#08192d;
+      --navy2:#0f2d4d;
+      --red:#d9252a;
+      --red2:#ef4449;
+      --ink:#132238;
+      --muted:#6f7b8c;
+      --line:#e5eaf0;
+      --soft:#f5f7fb;
+      --white:#fff;
+      --green:#15845a;
+      --amber:#b7791f;
+      --blue:#1e63d5;
+      --shadow:0 12px 34px rgba(8,25,45,.08);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Devanagari",Arial,sans-serif;
+      color:var(--ink);
+      background:#f4f7fb;
+    }
+    a{color:inherit;text-decoration:none}
+    button,input,select{font:inherit}
+    .app{min-height:100vh;display:grid;grid-template-columns:270px 1fr}
+    .sidebar{
+      position:sticky;top:0;height:100vh;overflow:auto;
+      background:
+        radial-gradient(circle at 20% 10%,rgba(217,37,42,.18),transparent 28%),
+        linear-gradient(180deg,#08192d 0%,#0c2744 100%);
+      color:#dce7f2;padding:22px 16px 18px;display:flex;flex-direction:column
+    }
+    .brand{
+      display:flex;align-items:center;gap:11px;padding:2px 8px 20px;
+      color:#fff;font-size:22px;font-weight:900
+    }
+    .brand-mark{
+      width:42px;height:42px;border-radius:13px;display:grid;place-items:center;
+      background:linear-gradient(145deg,var(--red),#f34b50);box-shadow:0 10px 24px rgba(217,37,42,.28)
+    }
+    .brand small{display:block;color:#9fb2c5;font-size:10px;font-weight:600;margin-top:2px}
+    .profile{
+      margin:0 4px 18px;padding:14px;border:1px solid rgba(255,255,255,.08);
+      border-radius:15px;background:rgba(255,255,255,.05)
+    }
+    .profile-top{display:flex;align-items:center;gap:10px}
+    .avatar{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.1);font-weight:900}
+    #who{font-size:12px;line-height:1.45;margin:0;color:#edf5fb}
+    .online{display:inline-flex;align-items:center;gap:6px;margin-top:8px;color:#9fe4c5;font-size:10px}
+    .online:before{content:"";width:6px;height:6px;border-radius:50%;background:#37d891}
+    .nav-label{padding:0 12px;margin:8px 0 6px;color:#7f98af;font-size:10px;font-weight:900;letter-spacing:.12em}
+    .side-nav{display:grid;gap:4px}
+    .side-nav a{
+      display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:11px;
+      color:#c9d7e4;font-size:13px;font-weight:700;transition:.16s
+    }
+    .side-nav a:hover,.side-nav a.active{background:rgba(255,255,255,.09);color:#fff}
+    .side-nav a.active{box-shadow:inset 3px 0 0 var(--red)}
+    .nav-ico{width:22px;text-align:center}
+    .side-spacer{flex:1}
+    .logout{
+      width:100%;height:42px;border:1px solid rgba(255,255,255,.1);border-radius:11px;
+      background:rgba(255,255,255,.05);color:#fff;cursor:pointer;font-weight:800
+    }
+    .logout:hover{background:rgba(217,37,42,.2)}
+
+    .main{min-width:0}
+    .topbar{
+      position:sticky;top:0;z-index:20;height:72px;background:rgba(255,255,255,.94);
+      backdrop-filter:blur(16px);border-bottom:1px solid var(--line);
+      display:flex;align-items:center;justify-content:space-between;gap:18px;padding:0 28px
+    }
+    .crumb{display:flex;align-items:center;gap:10px}
+    .menu-btn{display:none;width:40px;height:40px;border:1px solid var(--line);border-radius:11px;background:#fff}
+    .crumb h1{margin:0;font-size:18px;letter-spacing:-.01em}
+    .crumb small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+    .top-actions{display:flex;align-items:center;gap:9px}
+    .topbtn{
+      height:40px;padding:0 13px;border:1px solid var(--line);border-radius:11px;background:#fff;
+      color:#46566b;font-size:12px;font-weight:800;display:inline-flex;align-items:center;gap:7px
+    }
+    .topbtn:hover{background:#f8fafc}
+    .topbtn.primary{background:var(--red);border-color:var(--red);color:#fff}
+
+    .content{padding:26px 28px 40px;max-width:1600px;margin:0 auto}
+    .welcome{
+      display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:20px
+    }
+    .welcome h2{font-size:28px;margin:0 0 7px;letter-spacing:-.025em}
+    .welcome p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+    .secure-chip{
+      flex:0 0 auto;display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;
+      border:1px solid #cfe8dc;background:#f1fbf6;color:#14724d;font-size:11px;font-weight:900
+    }
+
+    #kpis.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:22px}
+    #kpis .card.kpi{
+      position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);
+      border-radius:16px;padding:18px 18px 16px;box-shadow:var(--shadow);min-height:112px
+    }
+    #kpis .card.kpi:after{
+      content:"";position:absolute;right:-22px;bottom:-25px;width:76px;height:76px;border-radius:50%;
+      background:rgba(30,99,213,.06)
+    }
+    #kpis .card.kpi .muted{display:block;color:var(--muted);font-size:12px;font-weight:800;margin-bottom:9px}
+    #kpis .card.kpi strong{font-size:31px;line-height:1;color:var(--navy);letter-spacing:-.03em}
+    #kpis .card.kpi:nth-child(2):before,#kpis .card.kpi:nth-child(4):before{
+      content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red)
+    }
+
+    .grid2{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(290px,.55fr);gap:18px;align-items:start}
+    .panel{
+      background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden
+    }
+    .panel-head{
+      display:flex;align-items:center;justify-content:space-between;gap:15px;padding:18px 20px;border-bottom:1px solid var(--line)
+    }
+    .panel-head h3{margin:0;font-size:16px}
+    .panel-head p{margin:4px 0 0;color:var(--muted);font-size:11px;line-height:1.5}
+    .panel-body{padding:0}
+    .badge{
+      display:inline-flex;align-items:center;gap:6px;padding:7px 9px;border-radius:999px;background:#fff4f4;
+      color:var(--red);border:1px solid #ffd8da;font-size:10px;font-weight:900
+    }
+    .btn{
+      min-height:38px;padding:0 12px;border-radius:10px;border:1px solid var(--line);cursor:pointer;
+      background:#fff;color:#314155;font-weight:800;font-size:12px;display:inline-flex;align-items:center;justify-content:center;gap:6px
+    }
+    .btn:hover{background:#f8fafc}
+    .btn-primary{background:var(--red);border-color:var(--red);color:#fff}
+    .btn-success{background:#148357;border-color:#148357;color:#fff}
+    .btn-outline{background:#fff}
+    .tablewrap{overflow:auto}
+    .table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px}
+    .table th{
+      background:#f8fafc;color:#6a7584;font-size:10px;text-transform:uppercase;letter-spacing:.04em;
+      text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap
+    }
+    .table td{padding:13px 14px;border-bottom:1px solid #edf0f4;vertical-align:middle}
+    .table tr:last-child td{border-bottom:0}
+    .table tbody tr:hover{background:#fbfcfe}
+    .table .btn{min-height:33px;padding:0 10px;font-size:11px}
+
+    .quick{
+      display:grid;gap:10px;padding:16px
+    }
+    .quick a{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;border:1px solid var(--line);
+      border-radius:13px;background:#fff;color:#27384d
+    }
+    .quick a:hover{background:#f8fafc}
+    .qleft{display:flex;align-items:center;gap:11px}
+    .qicon{
+      width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:#f2f6fb;color:var(--navy)
+    }
+    .quick b{display:block;font-size:12px}
+    .quick small{display:block;color:var(--muted);font-size:10px;margin-top:2px}
+    .arrow{color:#9aa5b2}
+
+    .section-anchor{scroll-margin-top:90px}
+    .notice{
+      margin:16px 20px 20px;padding:13px 14px;border:1px solid #dfe8f1;background:#f8fbfe;border-radius:12px;
+      font-size:11px;color:#53657a;line-height:1.6
+    }
+    .footer{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;color:#8490a0;font-size:10px;padding:2px 4px
+    }
+    .footer a{font-weight:900;color:#657487}
+
+    @media(max-width:1050px){
+      .app{grid-template-columns:230px 1fr}
+      #kpis.kpis{grid-template-columns:repeat(2,1fr)}
+      .grid2{grid-template-columns:1fr}
+    }
+    @media(max-width:760px){
+      .app{display:block}
+      .sidebar{
+        position:fixed;left:-285px;top:0;width:270px;z-index:50;transition:.2s;box-shadow:20px 0 60px rgba(0,0,0,.18)
+      }
+      body.sidebar-open .sidebar{left:0}
+      .topbar{height:66px;padding:0 14px}
+      .menu-btn{display:inline-grid;place-items:center}
+      .crumb h1{font-size:16px}
+      .crumb small{display:none}
+      .top-actions .topbtn:not(.primary){display:none}
+      .content{padding:18px 14px 32px}
+      .welcome{align-items:flex-start}
+      .welcome h2{font-size:23px}
+      .secure-chip{display:none}
+      #kpis.kpis{grid-template-columns:repeat(2,1fr);gap:10px}
+      #kpis .card.kpi{min-height:96px;padding:15px}
+      #kpis .card.kpi strong{font-size:26px}
+      .panel-head{align-items:flex-start;flex-direction:column}
+      .panel-head .btn{width:100%}
+      .footer{flex-direction:column;align-items:flex-start}
+    }
+    @media(max-width:430px){
+      #kpis.kpis{grid-template-columns:1fr 1fr}
+      #kpis .card.kpi .muted{font-size:10px}
+      .content{padding-left:10px;padding-right:10px}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">भे</span>
+      <span>भेटिन्छ<small>Management Console</small></span>
+    </a>
+
+    <div class="profile">
+      <div class="profile-top">
+        <div class="avatar">SA</div>
+        <div><p id="who">Admin loading...</p><span class="online">Secure session active</span></div>
+      </div>
+    </div>
+
+    <div class="nav-label">MANAGEMENT</div>
+    <nav class="side-nav">
+      <a class="active" href="#dashboard"><span class="nav-ico">▦</span>Dashboard</a>
+      <a href="#businesses"><span class="nav-ico">🏪</span>Businesses</a>
+      <a href="#categories"><span class="nav-ico">🗂️</span>Categories</a>
+      <a href="#plans"><span class="nav-ico">💳</span>Plans & Payments</a>
+      <a href="#emergency"><span class="nav-ico">🚨</span>Emergency</a>
+      <a href="#manpower"><span class="nav-ico">✈️</span>Manpower Review</a>
+    </nav>
+
+    <div class="nav-label">SECURITY & CONTROL</div>
+    <nav class="side-nav">
+      <a href="#admins"><span class="nav-ico">🛡️</span>Admins & Permissions</a>
+      <a href="#audit"><span class="nav-ico">🧾</span>Audit Log</a>
+    </nav>
+
+    <div class="side-spacer"></div>
+    <button class="logout" id="logoutBtn">↪ Logout</button>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumb">
+        <button class="menu-btn" id="menuBtn" aria-label="Menu">☰</button>
+        <div><h1>Super Admin Dashboard</h1><small>भेटिन्छ • Central Management & Security Control</small></div>
+      </div>
+      <div class="top-actions">
+        <a class="topbtn" href="index.html">↗ Public Site</a>
+        <a class="topbtn primary" href="#admins">＋ Add / Manage Admin</a>
+      </div>
+    </header>
+
+    <div class="content" id="dashboard">
+      <div class="welcome">
+        <div>
+          <h2>व्यवस्थापन केन्द्र</h2>
+          <p>Business approval, permissions, payments, emergency data र audit activity एउटै ठाउँबाट control गर्नुहोस् ।</p>
+        </div>
+        <div class="secure-chip">● Protected Super Admin Session</div>
+      </div>
+
+      <section class="kpis" id="kpis"></section>
+
+      <div class="grid2">
+        <div>
+          <section class="panel section-anchor" id="businesses">
+            <div class="panel-head">
+              <div>
+                <h3>Pending Business Approval</h3>
+                <p>Payment ≠ Verification. Documents, identity र category rules review गरेपछि मात्र approve गर्नुहोस् ।</p>
+              </div>
+              <span class="badge">Review Queue</span>
+            </div>
+            <div class="panel-body tablewrap">
+              <table class="table">
+                <thead><tr><th>Business</th><th>Category</th><th>Plan</th><th>Action</th></tr></thead>
+                <tbody id="pendingRows"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel section-anchor" id="admins">
+            <div class="panel-head">
+              <div>
+                <h3>Admins & Permissions</h3>
+                <p>Super Admin बाट Admin add, Active/Inactive र module permissions नियन्त्रण गर्नुहोस् ।</p>
+              </div>
+              <button class="btn btn-primary" onclick="alert('Add Admin form अर्को चरणमा backend field mapping सहित जोडिन्छ ।')">＋ Add Admin</button>
+            </div>
+            <div class="panel-body tablewrap">
+              <table class="table">
+                <thead><tr><th>Name</th><th>Username</th><th>Status</th><th>Permissions</th><th>Action</th></tr></thead>
+                <tbody id="adminsRows"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel section-anchor" id="audit">
+            <div class="panel-head">
+              <div>
+                <h3>Audit Log</h3>
+                <p>Admin activity, sensitive updates र system actions को accountability record ।</p>
+              </div>
+            </div>
+            <div class="panel-body tablewrap">
+              <table class="table">
+                <thead><tr><th>Date/Time</th><th>Actor</th><th>Action</th><th>Record</th></tr></thead>
+                <tbody id="auditRows"></tbody>
+              </table>
+            </div>
+            <div class="notice"><strong>Security rule:</strong> UI मा button लुकाउनु मात्र security होइन । Backend permission validation अनिवार्य हुन्छ । Permanent delete Admin बाट हुँदैन; request/approval workflow प्रयोग हुन्छ ।</div>
+          </section>
+        </div>
+
+        <aside>
+          <section class="panel">
+            <div class="panel-head"><div><h3>Quick Control</h3><p>मुख्य management modules</p></div></div>
+            <div class="quick">
+              <a id="categories" href="#categories"><div class="qleft"><span class="qicon">🗂️</span><div><b>Categories</b><small>Category & custom field control</small></div></div><span class="arrow">→</span></a>
+              <a id="plans" href="#plans"><div class="qleft"><span class="qicon">💳</span><div><b>Plans & Payments</b><small>Trial, paid plans & activation</small></div></div><span class="arrow">→</span></a>
+              <a id="emergency" href="#emergency"><div class="qleft"><span class="qicon">🚨</span><div><b>Emergency</b><small>Official emergency contacts</small></div></div><span class="arrow">→</span></a>
+              <a id="manpower" href="#manpower"><div class="qleft"><span class="qicon">✈️</span><div><b>Manpower Review</b><small>Verified demand review workflow</small></div></div><span class="arrow">→</span></a>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head"><div><h3>System Status</h3><p>Operational overview</p></div></div>
+            <div class="quick">
+              <a href="#businesses"><div class="qleft"><span class="qicon">✅</span><div><b>Approval Workflow</b><small>Controlled review enabled</small></div></div><span class="arrow">●</span></a>
+              <a href="#admins"><div class="qleft"><span class="qicon">🔐</span><div><b>Role Security</b><small>Permission based access</small></div></div><span class="arrow">●</span></a>
+              <a href="#audit"><div class="qleft"><span class="qicon">🧾</span><div><b>Audit Trail</b><small>Administrative accountability</small></div></div><span class="arrow">●</span></a>
+            </div>
+          </section>
+        </aside>
+      </div>
+
+      <div class="footer">
+        <span>© 2026 भेटिन्छ • Super Admin Management Console</span>
+        <span>Designed & Developed by Nirajan Aryal | <a href="tel:9851113811">9851113811</a></span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="config.js"></script>
+<script src="admin.js"></script>
+<script>
+  (function(){
+    const menuBtn=document.getElementById('menuBtn');
+    if(menuBtn) menuBtn.onclick=()=>document.body.classList.toggle('sidebar-open');
+    document.querySelectorAll('.side-nav a').forEach(a=>{
+      a.addEventListener('click',()=>{
+        document.querySelectorAll('.side-nav a').forEach(x=>x.classList.remove('active'));
+        a.classList.add('active');
+        document.body.classList.remove('sidebar-open');
+      });
+    });
+  })();
+</script>
+</body>
+</html>
