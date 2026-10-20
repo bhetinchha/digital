@@ -241,7 +241,7 @@ async function loadBootstrap(){
   renderCategorySelect();renderCategories();buildRegisterCategories();
 }
 function renderCategorySelect(){const s=$('#categorySelect');s.innerHTML='<option value="">सबै क्याटेगोरी</option>'+bootstrap.categories.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');}
-function renderCategories(showAll=false){const el=$('#categories');let ms=bootstrap.masters.length?bootstrap.masters:fallbackBootstrap().masters;const list=showAll?ms:ms.slice(0,10);el.innerHTML=list.map(m=>`<button class="cat-card" data-master="${esc(m.id)}"><span class="cat-icon">${m.icon||'▦'}</span><span><h3>${esc(m.name)}</h3><small>${m.count||m.subs?.length||''} सेवा / व्यवसाय</small></span></button>`).join('');$$('[data-master]').forEach(b=>b.onclick=()=>{const m=ms.find(x=>String(x.id)===b.dataset.master);const first=bootstrap.categories.find(c=>String(c.masterId)===String(m?.id));if(first){$('#categorySelect').value=first.id;$('#q').value=m.name;}doSearch();});}
+function renderCategories(showAll=false){const el=$('#categories');let ms=bootstrap.masters.length?bootstrap.masters:fallbackBootstrap().masters;const list=showAll?ms:ms.slice(0,12);el.innerHTML=list.map(m=>`<button class="cat-card" data-master="${esc(m.id)}"><span class="cat-icon">${m.icon||'▦'}</span><span><h3>${esc(m.name)}</h3><small>${m.count||m.subs?.length||''} सेवा / व्यवसाय</small></span></button>`).join('');$$('[data-master]').forEach(b=>b.onclick=()=>{const m=ms.find(x=>String(x.id)===b.dataset.master);const first=bootstrap.categories.find(c=>String(c.masterId)===String(m?.id));if(first){$('#categorySelect').value=first.id;$('#q').value=m.name;}doSearch();});}
 function stars(v){const n=Math.max(0,Math.min(5,Number(v)||0));return `<span class="star">★</span> ${n.toFixed(1)}`}
 function businessCard(b){const status=String(b.listingStatus||b.status||'').toUpperCase();const trial=status.includes('TRIAL');return `<article class="business-card"><div class="business-head"><div><button class="business-name" data-profile="${esc(b.id)}">${esc(b.name)} ${b.verified?'<span class="verified-mark">✓</span>':''}</button><div class="business-location">⌖ ${esc(b.address||b.location||'नेपाल')}</div></div><div class="rating">${stars(b.ratingAvg)} <small>(${Number(b.reviewCount||0)})</small></div></div><div class="status-line">${b.openNow===false?'<span>Closed</span>':'<span class="open-pill">Open now</span>'}${trial?'<span class="trial-pill">Trial</span>':''}<span>${b.category?esc(b.category):''}</span></div><p class="business-desc">${esc(b.desc||'')}</p><div class="business-actions"><button class="btn btn-outline" data-profile="${esc(b.id)}">View details</button>${b.phone?`<a class="btn btn-primary" href="tel:${esc(b.phone)}">📞 Call</a>`:''}${b.whatsapp?`<a class="btn btn-outline" target="_blank" rel="noopener" href="https://wa.me/977${esc(String(b.whatsapp).replace(/\D/g,'').slice(-10))}">WhatsApp</a>`:''}<button class="rate-btn" data-rate="${esc(b.id)}" data-name="${esc(b.name)}">☆ Rate</button></div></article>`}
 function bindCards(){$$('[data-profile]').forEach(x=>x.onclick=()=>showProfile(x.dataset.profile));$$('[data-rate]').forEach(x=>x.onclick=()=>openRating(x.dataset.rate,x.dataset.name));}
@@ -396,3 +396,56 @@ async function init(){
   loadLocationDirectory();
 }
 document.addEventListener('DOMContentLoaded',init);
+
+// ============================================================
+// Home display enhancement - independent of existing API logic.
+// ============================================================
+function initHomeDisplayEnhancements() {
+  const quickSearch = document.getElementById('heroQuickSearch');
+  const quickButton = document.getElementById('heroSearchBtn');
+  const originalSearch = document.getElementById('q');
+  const runQuickSearch = () => {
+    if (originalSearch && quickSearch) {
+      originalSearch.value = quickSearch.value.trim();
+    }
+    doSearch();
+  };
+
+  quickButton?.addEventListener('click', runQuickSearch);
+  quickSearch?.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      runQuickSearch();
+    }
+  });
+
+  document.querySelectorAll('[data-feature-search]').forEach(button => {
+    button.addEventListener('click', () => {
+      const term = button.dataset.featureSearch || '';
+      if (quickSearch) quickSearch.value = term;
+      if (originalSearch) originalSearch.value = term;
+      doSearch();
+    });
+  });
+
+  const menuToggle = document.getElementById('mobileMenuToggle');
+  const desktopNav = document.querySelector('.desktop-nav');
+  menuToggle?.addEventListener('click', () => {
+    const isOpen = desktopNav?.classList.toggle('menu-open') || false;
+    menuToggle.setAttribute('aria-expanded', String(isOpen));
+  });
+  desktopNav?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      desktopNav.classList.remove('menu-open');
+      menuToggle?.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  document.getElementById('mobileSearchShortcut')?.addEventListener('click', event => {
+    event.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => quickSearch?.focus(), 250);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initHomeDisplayEnhancements);
