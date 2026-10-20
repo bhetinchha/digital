@@ -488,3 +488,63 @@ body { background: #fff; }
         background-position: center center;
     }
 }
+
+
+/* ==============================================================
+   BHETINCHHA: FOOTER ONLY UPDATE
+   Background asset: footer-bg.webp (GitHub root)
+   All content remains editable HTML, not text inside an image.
+   ============================================================== */
+.footer.footer-nepal {
+  background: #fff3f3 url("footer-bg.webp") center bottom / cover no-repeat;
+  color: #222;
+  padding: 32px 0 0;
+  min-height: 370px;
+}
+.footer-nepal .footer-trust {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid rgba(209, 92, 100, .15);
+  border-radius: 18px;
+  background: rgba(255, 250, 250, .82);
+  padding: 20px 15px;
+  gap: 8px;
+  backdrop-filter: blur(5px);
+}
+.footer-nepal .trust-item { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 5px 12px; border-right: 1px solid #e5ced0; }
+.footer-nepal .trust-item:last-child { border-right: 0; }
+.footer-nepal .trust-icon { font-size: 30px; font-weight: 900; }
+.footer-nepal .trust-icon.red { color: #e11626; }
+.footer-nepal .trust-icon.blue { color: #1774e8; }
+.footer-nepal .trust-icon.green { color: #08a34c; }
+.footer-nepal .trust-icon.orange { color: #f47a08; }
+.footer-nepal .trust-item b { font-size: 17px; color: #222; }
+.footer-nepal .trust-item small { display: block; color: #626262; font-size: 13px; margin-top: 3px; }
+.footer-nepal-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.2fr; gap: 34px; padding-top: 32px; padding-bottom: 100px; }
+.footer-nepal .footer-brand img { display: block; width: min(100%, 230px); height: auto; object-fit: contain; }
+.footer-nepal .footer-brand p { font-weight: 700; margin: 10px 0; }
+.footer-nepal .footer-links { display: flex; flex-direction: column; align-items: flex-start; gap: 9px; }
+.footer-nepal .footer-links h3 { margin: 0 0 5px; font-size: 19px; color: #242424; }
+.footer-nepal .footer-links a, .footer-nepal .footer-links button { color: #343434; font: inherit; text-decoration: none; border: 0; padding: 0; background: none; cursor: pointer; }
+.footer-nepal .footer-links a:hover, .footer-nepal .footer-links button:hover { color: #df1425; text-decoration: underline; }
+.footer-nepal .footer-contact p { margin: 0; }
+.footer-nepal .footer-social { display: flex; gap: 8px; margin-top: 5px; }
+.footer-nepal .footer-social span { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; background: #df1425; color: #fff; font-weight: 900; }
+.footer-nepal-bottom { display: flex; justify-content: space-between; gap: 15px; padding: 13px max(24px, calc((100vw - 1200px)/2)); background: rgba(169, 49, 65, .63); color: white; font-size: 12px; }
+.footer-nepal-bottom a { color: white; }
+@media (max-width: 800px) {
+  .footer-nepal .footer-trust { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .footer-nepal .trust-item:nth-child(2) { border-right: 0; }
+  .footer-nepal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; padding-bottom: 95px; }
+  .footer-nepal-bottom { flex-direction: column; text-align: center; padding-bottom: 90px; }
+}
+@media (max-width: 480px) {
+  .footer-nepal .footer-trust { gap: 12px 0; padding: 12px 5px; }
+  .footer-nepal .trust-item { gap: 6px; padding: 5px; }
+  .footer-nepal .trust-icon { font-size: 22px; }
+  .footer-nepal .trust-item b { font-size: 13px; }
+  .footer-nepal .trust-item small { font-size: 11px; }
+  .footer-nepal-grid { gap: 18px; }
+  .footer-nepal .footer-links h3 { font-size: 16px; }
+  .footer-nepal .footer-links a, .footer-nepal .footer-links button { font-size: 13px; }
+}
