@@ -6,15 +6,15 @@
   <meta name="theme-color" content="#ffffff">
   <title>भेटिन्छ — जे चाहियो, सजिलै खोज्नुहोस् ।</title>
   <meta name="description" content="नेपालभरिका सेवा, व्यवसाय, घर-जग्गा, यात्रा, स्वास्थ्य, रोजगारी र दैनिक आवश्यकताहरू स्थानअनुसार खोज्ने प्लेटफर्म ।">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=home20261020">
 </head>
 <body>
 <a class="skip-link" href="#mainContent">मुख्य सामग्रीमा जानुहोस्</a>
 <header class="site-header">
   <div class="container nav-wrap">
-    <a class="brand" href="#home" aria-label="भेटिन्छ गृहपृष्ठ"><span class="brand-pin">⌖</span><span><b>भेटिन्छ</b><small>खोजेको सबै भेटिन्छ</small></span></a>
-    <nav class="desktop-nav" aria-label="मुख्य नेभिगेसन">
-      <a href="#home">होमपेज</a><a href="#categorySection">क्याटेगोरीहरू</a><a href="#nearMe">Near Me</a><a href="#emergency">आपत्कालीन</a>
+    <a class="brand" href="#home" aria-label="भेटिन्छ गृहपृष्ठ"><img class="brand-logo" src="logo.png" alt="भेटिन्छ" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="brand-fallback" hidden><b>भेटिन्छ</b><small>खोजेको सबै भेटिन्छ</small></span></a>
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="मेनु खोल्नुहोस्" aria-expanded="false">☰</button><nav class="desktop-nav" aria-label="मुख्य नेभिगेसन">
+      <a href="#home">⌂ होमपेज</a><a href="#categorySection">क्याटेगोरीहरू ▾</a><a href="#nearMe">Near Me</a><a href="#emergency">आपत्कालीन</a><a href="#footerContact">सम्पर्क</a>
     </nav>
     <div class="nav-actions"><button class="btn btn-outline" data-open-register>＋ व्यवसाय थप्नुहोस्</button><a class="account-link" href="supplier-login.html">◎ <span>मेरो खाता</span></a></div>
   </div>
@@ -23,7 +23,7 @@
   <section class="search-hero" id="home">
     <div class="container">
       <div class="hero-title"><h1>जे चाहियो, सजिलै <span>खोज्नुहोस् ।</span></h1><p>नेपालभरिका व्यवसाय, सेवा, घर-जग्गा, यात्रा र दैनिक आवश्यकताहरू एउटै ठाउँमा ।</p></div>
-      <div class="finder-card" role="search">
+      <div class="hero-search-shell"><div class="hero-search-bar"><span class="search-magnifier">⌕</span><input id="heroQuickSearch" type="search" placeholder="के खोज्दै हुनुहुन्छ? (जस्तै: प्लम्बर, कोठा भाडा, होटल, अस्पताल...)" aria-label="मुख्य खोज"><button id="heroSearchBtn" type="button">⌕ खोज्नुहोस्</button></div></div><div class="finder-card" role="search" id="advancedFilters">
         <div class="finder-field"><label for="categorySelect">क्याटेगोरी छान्नुहोस्</label><select id="categorySelect"><option value="">सबै क्याटेगोरी</option></select></div>
         <div class="finder-field"><label for="city">जिल्ला छान्नुहोस्</label><select id="city"><option value="">सबै जिल्ला</option></select></div>
         <div class="finder-field"><label for="municipalitySelect">पालिका / महानगर / नगर</label><select id="municipalitySelect" disabled><option value="">जिल्ला छानेपछि पालिका आउँछ</option></select></div>
@@ -35,8 +35,41 @@
     </div>
   </section>
 
-  <section class="section" id="categorySection"><div class="container"><div class="section-head"><div><h2>क्याटेगोरीहरू</h2><p>तपाईंलाई चाहिएको सेवा वा व्यवसाय छिटो छान्नुहोस् ।</p></div><button id="showAllCategories" class="text-btn">सबै हेर्नुहोस् →</button></div><div class="category-grid" id="categories"></div></div></section>
+  <section class="section categories-section" id="categorySection"><div class="container"><div class="section-head"><div><h2>मुख्य क्याटेगोरीहरू</h2></div><button id="showAllCategories" class="text-btn">सबै हेर्नुहोस् →</button></div><div class="category-grid" id="categories"></div></div></section>
 
+
+  <section class="section featured-services" id="featuredServices">
+    <div class="container">
+      <div class="section-head">
+        <div><h2>लोकप्रिय सेवाहरू</h2></div>
+        <a class="text-btn" href="#search-results">सबै हेर्नुहोस् →</a>
+      </div>
+      <div class="featured-grid">
+        <button type="button" class="featured-card" data-feature-search="Hotel">
+          <span class="featured-photo photo-hotel"><span class="featured-tag">होटल</span></span>
+          <span class="featured-info"><b>होटल / बसोबास</b><small>नेपालभरका होटल, रिसोर्ट र गेस्टहाउस</small><span class="featured-arrow">→</span></span>
+        </button>
+        <button type="button" class="featured-card" data-feature-search="Room Rent">
+          <span class="featured-photo photo-rent"><span class="featured-tag blue">घर-जग्गा</span></span>
+          <span class="featured-info"><b>घर-जग्गा</b><small>जग्गा, घर, फ्ल्याट र कोठा भाडा</small><span class="featured-arrow">→</span></span>
+        </button>
+        <button type="button" class="featured-card" data-feature-search="Plumber">
+          <span class="featured-photo photo-plumber"><span class="featured-tag green">सेवाहरू</span></span>
+          <span class="featured-info"><b>प्लम्बर / मर्मत सेवा</b><small>घर तथा कार्यालय मर्मत सेवा</small><span class="featured-arrow">→</span></span>
+        </button>
+        <button type="button" class="featured-card" data-feature-search="Taxi">
+          <span class="featured-photo photo-taxi"><span class="featured-tag orange">यातायात</span></span>
+          <span class="featured-info"><b>ट्याक्सी / ट्राभल</b><small>सुरक्षित र भरपर्दो यात्रा सेवा</small><span class="featured-arrow">→</span></span>
+        </button>
+      </div>
+      <div class="trust-strip">
+        <div><span>♟</span><b>विश्वसनीय</b><small>व्यवसाय तथा सेवा</small></div>
+        <div><span>⬡</span><b>सत्यापित</b><small>सूचना र सम्पर्क</small></div>
+        <div><span>●</span><b>नेपालभरका</b><small>स्थानहरूमा पहुँच</small></div>
+        <div><span>◷</span><b>छिटो र सजिलो</b><small>खोज अनुभव</small></div>
+      </div>
+    </div>
+  </section>
   <section class="section near-section" id="nearMe"><div class="container"><div class="near-box"><div class="near-title"><span>⌖</span><div><h2>Services Near Me</h2><p>तपाईंको स्थान नजिक उपलब्ध व्यवसाय र सेवा खोज्नुहोस् ।</p></div></div><div class="near-controls"><input id="nearAddress" placeholder="ठेगाना / क्षेत्र लेख्नुहोस्"><button class="btn btn-dark" id="useAddress">Use address</button><button class="btn btn-danger" id="nearMeBtn">◎ Use my location</button></div><div class="distance-row"><label>अधिकतम दूरी: <b id="distanceLabel">5 km</b></label><input id="distanceRange" type="range" min="1" max="25" value="5" step="1"></div></div><div class="filter-bar"><input id="resultFilter" placeholder="नाम वा क्षेत्रमा खोज्नुहोस्..."><button class="filter-chip" id="filterVerified">✓ Verified</button><button class="filter-chip" id="filterOpen">◷ Open now</button><select id="sortResults"><option value="relevance">Relevance</option><option value="rating">Highest Rating</option><option value="verified">Verified First</option><option value="name">Name A–Z</option></select></div></div></section>
 
   <section class="section results-section" id="search-results"><div class="container"><div class="section-head"><div><h2 id="resultsTitle">तपाईंका लागि उपलब्ध नतिजा</h2><p id="resultSummary">Database मा उपलब्ध व्यवसाय र सेवाहरू यहाँ देखिन्छन् ।</p></div></div><div class="results-grid" id="results" aria-live="polite"></div></div></section>
@@ -48,9 +81,15 @@
 
   <section class="business-mini"><div class="container business-mini-inner"><div><b>तपाईंको व्यवसाय पनि ग्राहकले भेटून् ।</b><span>पहिलो Trial अवधि Super Admin Settings अनुसार Free; त्यसपछि Paid activation आवश्यक ।</span></div><button class="btn btn-primary" data-open-register>＋ व्यवसाय दर्ता गर्नुहोस्</button></div></section>
 </main>
-<footer class="footer"><div class="container footer-inner"><div><b>भेटिन्छ</b><small>नेपालभरिका दैनिक आवश्यकताहरू खोज्ने डिजिटल प्लेटफर्म ।</small></div><div><a href="#categorySection">Categories</a><a href="#nearMe">Near Me</a><a href="#emergency">Emergency</a><a href="supplier-login.html">Supplier Login</a></div></div><div class="container footer-bottom"><span>© <span id="year"></span> भेटिन्छ ।</span><strong>Designed &amp; Developed by Nirajan Aryal | <a href="tel:9851113811">9851113811</a></strong></div></footer>
+<footer class="footer" id="footerContact"><div class="container footer-inner"><div><b>भेटिन्छ</b><small>नेपालभरिका दैनिक आवश्यकताहरू खोज्ने डिजिटल प्लेटफर्म ।</small></div><div><a href="#categorySection">Categories</a><a href="#nearMe">Near Me</a><a href="#emergency">Emergency</a><a href="supplier-login.html">Supplier Login</a></div></div><div class="container footer-bottom"><span>© <span id="year"></span> भेटिन्छ ।</span><strong>Designed &amp; Developed by Nirajan Aryal | <a href="tel:9851113811">9851113811</a></strong></div></footer>
 
-<nav class="mobile-nav"><a href="#home">⌂<small>Home</small></a><a href="#categorySection">▦<small>Categories</small></a><button data-open-register>＋<small>Business</small></button><a href="https://blood-donation-system-teal.vercel.app" target="_blank" rel="noopener noreferrer">🩸<small>Blood</small></a><button id="mobileSOS">🚨<small>SOS</small></button></nav>
+<nav class="mobile-nav" aria-label="मोबाइल नेभिगेसन">
+  <a href="#home" class="active">⌂<small>होम</small></a>
+  <a href="#home" id="mobileSearchShortcut">⌕<small>खोज</small></a>
+  <a href="#categorySection">▦<small>क्याटेगोरी</small></a>
+  <button type="button" data-open-register>⊞<small>व्यवसाय थप्नुहोस्</small></button>
+  <a href="supplier-login.html">♟<small>खाता</small></a>
+</nav>
 
 <div class="modal" id="businessModal" role="dialog" aria-modal="true"><div class="modal-panel wide-modal"><div class="modal-head"><div><h2>आफ्नो व्यवसाय भेटिन्छमा जोड्नुहोस्</h2><p>Category अनुसार विवरण बदलिन्छ । Trial सकिएपछि listing स्वतः hide हुन्छ; Paid activation पछि फेरि देखिन्छ ।</p></div><button class="iconbtn" data-close="businessModal">✕</button></div><div class="stepper"><span class="step active">1 व्यवसाय</span><span class="step">2 Category</span><span class="step">3 विवरण</span><span class="step">4 Review</span></div><form id="businessForm" onsubmit="return false">
 <section class="reg-step"><div class="form-grid"><div class="field"><label>Listing Type</label><select name="listingType"><option>Business / Company</option><option>Individual Professional</option><option>Supplier</option><option>Rental Service</option><option>Organization</option></select></div><div class="field"><label>Business / Provider Name *</label><input name="name" required></div><div class="field"><label>Contact Person</label><input name="contactPerson"></div><div class="field"><label>Mobile *</label><input name="mobile" inputmode="numeric" required></div><div class="field"><label>WhatsApp</label><input name="whatsapp" inputmode="numeric"></div><div class="field"><label>Email</label><input name="email" type="email"></div><div class="field"><label>District *</label><select name="district" id="regDistrict" required><option value="">जिल्ला छान्नुहोस्</option></select></div><div class="field"><label>पालिका / महानगर / नगर *</label><select name="municipality" id="regMunicipality" required disabled><option value="">जिल्ला छानेपछि पालिका आउँछ</option></select></div><div class="field"><label>Ward No. *</label><select name="ward" id="regWard" required disabled><option value="">पालिका छानेपछि वडा आउँछ</option></select></div><div class="field"><label>Area / Locality</label><input name="area" placeholder="टोल / क्षेत्र / landmark"></div><div class="field"><label>पूरा ठेगाना</label><input name="address"></div><div class="field full"><label>छोटो परिचय</label><textarea name="description"></textarea></div></div></section>
@@ -64,5 +103,5 @@
 <div class="modal" id="sosModal"><div class="modal-panel small-modal"><div class="modal-head"><h2>🚨 Emergency Help</h2><button class="iconbtn" data-close="sosModal">✕</button></div><div class="notice danger-notice">ज्यान जोखिममा भएको अवस्थामा official emergency service लाई पहिले call गर्नुहोस् ।</div><div class="modal-actions"><a class="btn btn-danger" href="tel:100">📞 Nepal Police 100</a><button class="btn btn-outline" id="openPoliceDirectory">नेपालभरि Police Contacts</button><a class="btn btn-outline" href="https://blood-donation-system-teal.vercel.app" target="_blank" rel="noopener noreferrer"><span style="display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;background:#fff;color:#d9252a;margin-right:4px" aria-hidden="true">
 <svg width="15" height="18" viewBox="0 0 24 30" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C12 0 2 11.8 2 18.2C2 24.7 6.5 30 12 30C17.5 30 22 24.7 22 18.2C22 11.8 12 0 12 0ZM12 25.5C8.8 25.5 6.2 22.6 6.2 19.1C6.2 17.6 7.2 15.4 8.6 13.1C8.3 14.6 8.5 16.1 9.2 17.4C10.2 19.3 12.3 20.6 14.8 20.6C15.8 20.6 16.7 20.4 17.5 20C17.1 23.1 14.8 25.5 12 25.5Z"/></svg>
 </span> Blood Donation System</a></div></div></div>
-<script src="config.js?v=054"></script><script src="data.js?v=054"></script><script src="app.js?v=0551-20260826"></script>
+<script src="config.js?v=054"></script><script src="data.js?v=054"></script><script src="app.js?v=home20261020"></script>
 </body></html>
